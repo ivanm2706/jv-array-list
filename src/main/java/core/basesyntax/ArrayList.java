@@ -11,24 +11,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = new Object[DEFAULT_CAPACITY];
-        size = 0;
-    }
-
-    private void growIfFull() {
-        if (size == elements.length) {
-            int newCapacity = elements.length + elements.length / GROWTH_DIVISOR;
-            Object[] newArray = new Object[newCapacity];
-
-            System.arraycopy(elements, 0, newArray, 0, size);
-
-            elements = newArray;
-        }
-    }
-
-    private void checkIndex(int ind) {
-        if (ind < 0 || ind >= size) {
-            throw new ArrayListIndexOutOfBoundsException("invalid index");
-        }
     }
 
     @Override
@@ -94,31 +76,22 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = -1;
 
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (elements[i] == null) {
-                    index = i;
-                    break;
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(elements[i])) {
-                    index = i;
-                    break;
-                }
+        for (int i = 0; i < size; i++) {
+            boolean isElementsEquals = element == null
+                    ? elements[i] == null
+                    : element.equals(elements[i]);
+
+            if (isElementsEquals) {
+                index = i;
+                break;
             }
         }
 
-        if (index == -1) {
-            throw new NoSuchElementException("element not found");
-        }
+        validateFoundIndex(index);
 
-        T removedElement = (T) elements[index];
-
+        final T removedElement = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
-
         return removedElement;
     }
 
@@ -130,5 +103,28 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void growIfFull() {
+        if (size == elements.length) {
+            int newCapacity = elements.length + elements.length / GROWTH_DIVISOR;
+            Object[] newArray = new Object[newCapacity];
+
+            System.arraycopy(elements, 0, newArray, 0, size);
+
+            elements = newArray;
+        }
+    }
+
+    private void checkIndex(int ind) {
+        if (ind < 0 || ind >= size) {
+            throw new ArrayListIndexOutOfBoundsException("invalid index");
+        }
+    }
+
+    private void validateFoundIndex(int index) {
+        if (index == -1) {
+            throw new NoSuchElementException("element not found");
+        }
     }
 }
