@@ -3,10 +3,11 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private Object[] elements;
-    private int size;
     private static final int DEFAULT_CAPACITY = 10;
     private static final int GROWTH_DIVISOR = 2;
+
+    private Object[] elements;
+    private int size;
 
     public ArrayList() {
         elements = new Object[DEFAULT_CAPACITY];
@@ -38,7 +39,6 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
@@ -63,7 +63,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-
     @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
@@ -86,9 +85,7 @@ public class ArrayList<T> implements List<T> {
 
         T oldElement = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        elements[size] = null;
-        size--;
-
+        elements[--size] = null;
         return oldElement;
     }
 
